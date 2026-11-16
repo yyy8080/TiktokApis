@@ -6,5 +6,10 @@
 from .tiktok_web import TikTokWebAPI, TiktokWebAPI
 from .tiktok import TiktokAPI
 from .tiktok_login import TiktokLoginAPI
+from .douyin_web import DouYinWebAPI, DouyinWebAPI
+from .douyin import DouyinAPI
 
-__all__ = ["TikTokWebAPI", "TiktokWebAPI", "TiktokAPI", "TiktokLoginAPI"]
+__all__ = [
+    "TikTokWebAPI", "TiktokWebAPI", "TiktokAPI", "TiktokLoginAPI",
+    "DouYinWebAPI", "DouyinWebAPI", "DouyinAPI",
+]

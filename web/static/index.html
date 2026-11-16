@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Douyin Console</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="hero">
+      <div>
+        <h1>Douyin 控制台</h1>
+        <p>导入当前浏览器在 douyin.com 的 Cookie，然后调用与 TikTok Web 对齐的读取、互动、直播、私信、电商和创作者接口。Cookie 只留在本机进程内存，导入后不会回写到页面。</p>
+      </div>
+      <div class="badge"><span class="dot" id="status-dot"></span><span id="status-text">未导入会话</span></div>
+    </div>
+    <div class="grid">
+      <div>
+        <section class="card">
+          <h2>导入 Cookie</h2>
+          <label for="cookie">完整请求 Cookie</label>
+          <textarea id="cookie" placeholder="sessionid=...; ttwid=...; msToken=...; UIFID=..."></textarea>
+          <label for="ua">User-Agent（可选，建议与浏览器一致）</label>
+          <input id="ua" placeholder="Mozilla/5.0 ...">
+          <label for="webid">webid / device_id（可选）</label>
+          <input id="webid" placeholder="webid">
+          <div class="row">
+            <button class="btn" id="import-btn">导入并进入会话</button>
+            <button class="btn secondary" id="clear-btn">清除会话</button>
+          </div>
+          <p class="hint">请使用自己的已登录 Chrome 会话。写操作（评论、点赞、发布）会真实打到 Douyin，默认发布可见范围为仅自己。</p>
+          <div class="summary" id="summary"></div>
+        </section>
+        <section class="card" style="margin-top:18px">
+          <h2>创作者发布</h2>
+          <label>类型</label>
+          <select id="pub-kind"><option value="video">视频</option><option value="photos">图集</option></select>
+          <label>文案</label>
+          <input id="pub-text" placeholder="作品文案">
+          <label>可见范围</label>
+          <select id="pub-vis">
+            <option value="1">仅自己</option>
+            <option value="2">好友</option>
+            <option value="0">公开</option>
+          </select>
+          <label>文件</label>
+          <input id="pub-files" type="file" multiple>
+          <div class="row"><button class="btn warn" id="publish-btn">上传并发布</button></div>
+        </section>
+      </div>
+      <section class="card">
+        <h2>接口</h2>
+        <div class="tabs" id="tabs"></div>
+        <div class="action-list" id="actions"></div>
+        <form class="fields" id="fields"></form>
+        <div class="row"><button class="btn" id="run-btn">调用</button></div>
+        <h2 style="margin-top:18px">结果</h2>
+        <pre id="out">等待调用…</pre>
+      </section>
+    </div>
+    <p class="footer">仅供学习和技术研究。遵守平台规则，不要提交 Cookie 或抓包文件。</p>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
