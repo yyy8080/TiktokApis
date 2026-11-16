@@ -22,5 +22,6 @@ COPY static ./static
 COPY utils ./utils
 COPY demo.py ./
 COPY README.md ./
+COPY web ./web
 
-CMD ["python", "-c", "import api.tiktok, api.tiktok_chat; print('TikTok Reverse API image ready')"]
+CMD ["python", "-c", "import api.tiktok, api.tiktok_chat, api.douyin_web, web.app; print('TikTok/Douyin API image ready')"]

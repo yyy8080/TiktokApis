@@ -25,6 +25,30 @@
 
 架构按 `api / builder / signing / utils` 分层。普通 Web 与 Creator HTTP 签名在 Python 中从当前请求纯计算；直播和私信 WebSocket 的 `frontierSign`、Shop BSID 使用仓库内 SDK 的本地 Node.js 运行器。抓包签名不作为运行时常量；必需字段、签名集合或长度不符时拒绝请求。不同页面与接口所需的 Cookie、storage、UA、header 顺序及 body 必须来自**同一次真实浏览器会话**。
 
+## 🎵 Douyin.com 适配与网页后台
+
+同一套能力已按 `douyin.com` 网页端映射：
+
+| TikTok 场景 | Douyin 入口 |
+| --- | --- |
+| 内容与用户 | `DouyinWebAPI`：作品详情、主页作品、推荐流、搜索、关注/粉丝、收藏、通知、观看历史 |
+| 评论与互动 | 评论/楼中楼、发评、点赞、收藏、关注 |
+| Creator | `creator_publish` / `creator_publish_photos`，默认仅自己可见 |
+| 直播 | 房间信息、进房、礼物列表、im/fetch、发弹幕、点赞 |
+| 私信 | 关系列表、用户资料、发送文本 |
+| 电商 | 商品详情与评价（只读） |
+
+认证入口是 `DouyinAuth.from_cookie`。签名字段是当前请求现算的 `a_bogus`（`signing/douyin_abogus.py`），不会复放抓包。Douyin 会轮换签名与风控；机房 IP、缺 `UIFID` 或 Cookie 过期时接口会返回空体或风控码，控制台会原样展示。
+
+启动网页后台（默认只监听本机）：
+
+```bash
+python -m pip install -r requirements.txt
+python -m web.app
+```
+
+浏览器打开 `http://127.0.0.1:8787`，粘贴当前 `www.douyin.com` 的完整 Cookie 即可调用上表全部操作。写操作会真实打到 Douyin。会话只存在于进程内存，导入后页面不再回显 Cookie。也可用 `demo_douyin.py` 做发布预检（资料文件 `.douyin-runtime.json` 已被 Git 忽略）。
+
 ## 🚀 快速开始
 
 需要 Python 3.11+；直播/私信 WebSocket 与 Shop BSID 的本地签名另需 Node.js 18+。在项目根目录安装：
@@ -98,13 +122,15 @@ python demo.py --publish photos ./1.jpg ./2.jpg --text "我的图集" --title "�
 ## 📦 运行时目录
 
 ```text
-api/                         TikTok Web API、兼容入口、登录占位
+api/                         TikTok / Douyin Web API、兼容入口、登录占位
 builder/                     Cookie/浏览器状态、header、query、签名调度
-signing/                     Python 签名、protobuf、WebMssdk 本地运行器
+signing/                     Python 签名、protobuf、WebMssdk 与 Douyin a_bogus
 reverse/tiktok_shop_bsid/env/ Shop BSID 本地 SDK 运行器与必需 bundle
 static/                      IM protobuf 生成代码（仍被收发接口使用）
 utils/                       HTTP 与兼容工具
+web/                         Douyin Cookie 控制台（FastAPI）
 demo.py                      私密视频/图集发布示例（默认不发送）
+demo_douyin.py               Douyin 发布预检示例
 author/logo.svg              项目 Logo
 ```
 
